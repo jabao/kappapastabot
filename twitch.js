@@ -8,6 +8,8 @@ var fs = require('fs');
 var tmi = require('tmi.js');
 var request = require('request');
 var cheerio = require('cheerio');
+var SERVICEURL = "http://www.twitchquotes.com/";
+var NUM_CHAR_LIM = 500;
 
 /* Must provide file named .userinfo with:
 	Twitch username on first line,
@@ -37,8 +39,8 @@ client.connect();
 
 // Triggered by receiving any chat message
 client.on('chat', function (channel, userstate, message, self) {
-	//if (self) return;
-<<<<<<< HEAD
+	//Don't respond to own messages
+	if (self) return;
 	
 	if(message === '!copypasta'){
 		var valid = false;
@@ -46,14 +48,18 @@ client.on('chat', function (channel, userstate, message, self) {
 			if(!valid){
 				/* Unfortunately the copypasta pages are not numbered contiguously,
 					so a large number (largest of all pages) is chosen. Randomly choose one */
-				request("http://www.twitchquotes.com/copypastas/" + parseInt(Math.random() * 2100),
+				request(SERVICEURL + "copypastas/" + parseInt(Math.random() * 2100),
 					function(error, response, body) {
-						console.log(response.statusCode);
+						if(error){
+							console.log("Error: " + error);
+							return;
+						}
 						if(response.statusCode != 404) { // Make sure page exists
 							var $ = cheerio.load(body);
-							var copypasta = $("#quote_content_0").text(); //Copypasta found here
-							if(copypasta.length <= 500){ // Twitch limits messages to be 500 characters at most
-								client.say(channel, copypasta);
+							var pasta = $("#quote_content_0").text(); //Copypasta found here
+							if(pasta.length <= NUM_CHAR_LIM){ // Twitch limits messages to be 500 characters at most
+								console.log("Status Code: " + response.statusCode);
+								client.say(channel, pasta);
 								valid = true;
 							}
 						}
@@ -61,13 +67,12 @@ client.on('chat', function (channel, userstate, message, self) {
 					});
 			}
 		}());
-	} else if (message.indexOf('!copypasta') == 0 && message.length > 11 && message.charAt(10) == ' '){
+	} else if (message.indexOf('!copypasta') == 0 && message.length > 11 && message.charAt(10) == ' '){ // Command copypasta + a streamer to pull from
 		message = message.slice(11).toLowerCase();
-		console.log(message);
 		var stream;
-		switch(message) {
+		switch(message) { // Extracting copypastas from www.twitchquotes.com, choose from top 2 pages of streameres
 			case "kripp":
-				var page = Math.floor(Math.random() * 57) + 1;
+				var page = Math.floor(Math.random() * 57) + 1; // Add page numbers for popular streamers
 				stream = 'nl_Kripp?page=' + page;
 				break;
 			case "reynad":
@@ -151,40 +156,47 @@ client.on('chat', function (channel, userstate, message, self) {
 			case "theoddone":
 				stream = 'TSM_TheOddOne';
 				break;
-			default:
+			default: // Streamer not found
 				client.say(channel, "Not a valid streamer. Enter [!copypasta streamer] without the brackets. Valid streams: Kripp, Reynad, imaqtpie, Forsen, TrumpSC, RiotGames, Trick2g, Sneakycastroo, StrifeCro, Tidesoftime, Dyrus, Tyler1, Sing_sing, DotaMajor, EtrnlWait, AnnieBot, Reckful, esltv, Bjergsen, kaceytron, WildTurtle, Hafu, Hearthstone, TempoStorm, Kolento, TheOddOne");
 				return;
 		}
 
 		var pasta_list = [];
 
-	    request("http://www.twitchquotes.com/streams/" + stream, function(error, response, body) {
-	      if(error) {
-	        console.log("Error: " + error);
-	      }
-	      console.log("Status code: " + response.statusCode);
+	    request(SERVICEURL + "streams/" + stream, function(error, response, body) {
+			if(error) {
+				console.log("Error: " + error);
+				return;
+			}
+			console.log("Status code: " + response.statusCode);
 
-	      var $ = cheerio.load(body);
+			var $ = cheerio.load(body);
+			$('div.quote_text_area').each(function() {
+				var title = $(this).find('span').text();
+				// Copypastas with profanity are censored and replaced with 'Quote has been hidden due to profanity', don't include those
+				// Avoid spam by conforming to Twitch's 500 character limit
+				if(title.indexOf('profanity') == -1 && title.length <= NUM_CHAR_LIM) {
+					pasta_list.push(title);
+				}
+			});
 
-	      $('div.quote_text_area').each(function() {
-	        var title = $(this).find('span').text();
-	        if(title.indexOf('profanity') == -1 && title.length < 500) {
-	        	pasta_list.push(title);
-	    	}
-	      });
-
-	      if (pasta_list.length > 0) {
-	      	client.say(channel, pasta_list[Math.floor(Math.random() * pasta_list.length)]);
-	  	  }
+			if (pasta_list.length > 0) {
+				var pasta = pasta_list[Math.floor(Math.random() * pasta_list.length)];
+				client.say(channel, pasta);
+			}
 	    });
 	}
 });
 
+// When the sever pings us, we need to respond with PONG to avoid being disconnected
 client.on('ping', function(){
 	client.raw('PONG :tmi.twitch.tv');
 });
 
-/*function streamPasta(stream) {
+/*
+Deprecated Function
+
+function streamPasta(stream) {
 	console.log('hello');
     var pasta_list = [];
 
