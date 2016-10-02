@@ -8,3 +8,13 @@
   <li>Type [!copypasta help] in Twitch chat to get a list of streamers that are supported.</li>
 </ul>
 
+<h1>Creators</h1>
+<ul>
+Jason Bao
+<li><a href = https://github.com/jabao>https://github.com/jabao</a></li>
+</ul>
+
+<ul>
+Jeremiah Fan
+<li><a href = https://github.com/jeremiah-fan>https://github.com/jeremiah-fan</a></li>
+</ul>
