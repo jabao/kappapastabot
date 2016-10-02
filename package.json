@@ -1,0 +1,14 @@
+{
+  "name": "animal_facts_bot",
+  "version": "1.0.0",
+  "description": "A Twitch bot that scrapes Google for cool animal facts.",
+  "main": "twitch.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tmi.js": "^1.1.1"
+  }
+}
