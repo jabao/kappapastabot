@@ -154,7 +154,7 @@ client.on('chat', function (channel, userstate, message, self) {
 				stream = 'TSM_TheOddOne';
 				break;
 			default: // Streamer not found
-				client.say(channel, "Not a valid streamer. Enter [!copypasta streamer] without the brackets. Valid streams: Kripp, Reynad, imaqtpie, Forsen, TrumpSC, RiotGames, Trick2g, Sneakycastroo, StrifeCro, Tidesoftime, Dyrus, Tyler1, Sing_sing, DotaMajor, EtrnlWait, AnnieBot, Reckful, esltv, Bjergsen, kaceytron, WildTurtle, Hafu, Hearthstone, TempoStorm, Kolento, TheOddOne");
+				client.say(channel, "Enter [!copypasta streamer] without the brackets. Valid streams: Kripp, Reynad, imaqtpie, Forsen, TrumpSC, RiotGames, Trick2g, Sneakycastroo, StrifeCro, Tidesoftime, Dyrus, Tyler1, Sing_sing, DotaMajor, EtrnlWait, AnnieBot, Reckful, esltv, Bjergsen, kaceytron, WildTurtle, Hafu, Hearthstone, TempoStorm, Kolento, TheOddOne");
 				return;
 		}
 
