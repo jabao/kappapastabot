@@ -38,6 +38,7 @@ client.connect();
 // Triggered by receiving any chat message
 client.on('chat', function (channel, userstate, message, self) {
 	//if (self) return;
+<<<<<<< HEAD
 	
 	if(message === '!copypasta'){
 		var valid = false;
@@ -154,6 +155,7 @@ client.on('chat', function (channel, userstate, message, self) {
 				client.say(channel, "Not a valid streamer. Enter [!copypasta streamer] without the brackets. Valid streams: Kripp, Reynad, imaqtpie, Forsen, TrumpSC, RiotGames, Trick2g, Sneakycastroo, StrifeCro, Tidesoftime, Dyrus, Tyler1, Sing_sing, DotaMajor, EtrnlWait, AnnieBot, Reckful, esltv, Bjergsen, kaceytron, WildTurtle, Hafu, Hearthstone, TempoStorm, Kolento, TheOddOne");
 				return;
 		}
+
 		var pasta_list = [];
 
 	    request("http://www.twitchquotes.com/streams/" + stream, function(error, response, body) {
@@ -181,3 +183,27 @@ client.on('chat', function (channel, userstate, message, self) {
 client.on('ping', function(){
 	client.raw('PONG :tmi.twitch.tv');
 });
+
+/*function streamPasta(stream) {
+	console.log('hello');
+    var pasta_list = [];
+
+    var pasta;
+    request("http://www.twitchquotes.com/streams/" + stream, function(error, response, body) {
+      if(error) {
+        console.log("Error: " + error);
+      }
+      console.log("Status code: " + response.statusCode);
+
+      var $ = cheerio.load(body);
+
+      $('div.quote_text_area').each(function() {
+        var title = $(this).find('span').text();
+        pasta_list.push(title);
+      });
+
+      client.say(pasta_list[Math.floor(Math.random() * pasta.length)]);
+    });
+    console.log(pasta);
+    return pasta;
+} */
