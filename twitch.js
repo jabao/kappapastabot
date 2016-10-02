@@ -11,10 +11,7 @@ var cheerio = require('cheerio');
 var SERVICEURL = "http://www.twitchquotes.com/";
 var NUM_CHAR_LIM = 500;
 
-/* Must provide file named .userinfo with:
-	Twitch username on first line,
-	oauth token only on second line,
-	and channel (no #) to watch on third line */
+// Edit channel (default is kappapastabot) in .userinfo on third line
 var load = fs.readFileSync('.userinfo').toString().split('\r\n');
 
 // Options object needed to use tmi, use information loaded from file
