@@ -1,4 +1,4 @@
-<h1>copypastabot</h1>
+<h1>kappapastabot</h1>
 <p>A Twitch chat bot to send popular copy pastas when prompted with commands. Built at SD Hacks 2016.</p>
 
 <h1>How to Use</h1>
