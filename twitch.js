@@ -9,6 +9,7 @@ var tmi = require('tmi.js');
 var request = require('request');
 var cheerio = require('cheerio');
 var SERVICEURL = "http://www.twitchquotes.com/";
+var DONGERURL = "http://www.dongerlist.com";
 var NUM_CHAR_LIM = 500;
 
 // Edit channel (default is kappapastabot) in .userinfo on third line
@@ -41,7 +42,7 @@ client.on('chat', function (channel, userstate, message, self) {
 	
 	if(message === '!copypasta'){
 		var valid = false;
-		(function loop() { // We need recursion to occur that every request follows one another
+		(function loop() { // We need recursion to ensure that every request follows one another
 			if(!valid){
 				/* Unfortunately the copypasta pages are not numbered contiguously,
 					so a large number (largest of all pages) is chosen. Randomly choose one */
@@ -99,7 +100,7 @@ client.on('chat', function (channel, userstate, message, self) {
 			case "sneakycastroo":
 				stream = 'Sneakycastroo';
 				break;
-			case "strifeCro":
+			case "strifecro":
 				stream = 'StrifeCro';
 				break;
 			case "tidesoftime":
@@ -182,6 +183,28 @@ client.on('chat', function (channel, userstate, message, self) {
 				client.say(channel, pasta);
 			}
 	    });
+	} else if (message === "!donger"){
+		request(DONGERURL + "/page/" + Math.floor(Math.random() * 40 + 1),
+			function(err, response, body){
+				if(err){
+					console.log(err);
+					return;
+				}
+				console.log("Status Code: " + response.statusCode);
+				if(response.statusCode == 200){
+					var $ = cheerio.load(body);
+					var numDong = $(".list-1-item").length;
+					console.log(numDong);
+					var dongChoose = Math.floor(Math.random() * numDong + 1);
+					var donger = $(".list-1-item:nth-child(" + dongChoose + ") > textarea").text();
+					while (donger.length < 100){
+						donger += donger;
+					}
+					client.say(channel, donger.slice(0, 100));
+				}
+			});
+	} else if (message === "!help"){
+		client.say(channel, 'Welcome to KappaPastaBot. Available commands: !copypasta, !copypasta [streamer_name], !donger');
 	}
 });
 
