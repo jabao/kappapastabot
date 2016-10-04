@@ -6,6 +6,7 @@
   <li>Type [!copypasta] in Twitch chat without the brackets to have a bot output a random copypasta.</li>
   <li>Type [!copypasta streamername] in Twitch chat to get a copypasta specific to a certain streamer.</li>
   <li>Type [!copypasta help] in Twitch chat to get a list of streamers that are supported.</li>
+  <li>Type [!donger] to get a string of dongers.</li>
 </ul>
 
 <h1>Creators</h1>
